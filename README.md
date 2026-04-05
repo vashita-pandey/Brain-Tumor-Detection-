@@ -131,4 +131,3 @@ Full pipeline applied to 15 real MRI images (`img1.jpg`–`img15.jpg`):
   GradCAM heatmap → bounding box
 - Summary grid visualization (original + localized, 5 columns)
 
-**Sample outputs:**
