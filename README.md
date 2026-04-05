@@ -131,3 +131,73 @@ Full pipeline applied to 15 real MRI images (`img1.jpg`–`img15.jpg`):
   GradCAM heatmap → bounding box
 - Summary grid visualization (original + localized, 5 columns)
 
+### Monte Carlo Dropout – Uncertainty Estimation
+- Dropout kept **active during inference** (`model(img_array, training=True)`)
+- 30 stochastic forward passes → distribution of predictions
+- Mean = final prediction | Variance = uncertainty score
+- Output: *Predicted: No Tumor | Confidence: 76.27% | Uncertainty: 0.0121*
+
+### ROC Curves & AUC
+- One-vs-Rest binarization for 4-class ROC computation
+- AUC computed per class using Scikit-learn
+
+---
+
+## 🛠️ Tech Stack
+
+| Category         | Tools                                               |
+|------------------|-----------------------------------------------------|
+| Deep Learning    | TensorFlow 2.x, Keras                               |
+| Pretrained Models| ResNet50, EfficientNetB0 (ImageNet weights)         |
+| Data Handling    | NumPy, Pandas, Keras ImageDataGenerator             |
+| Image Processing | OpenCV (cv2)                                        |
+| Visualization    | Matplotlib, Seaborn                                 |
+| ML Evaluation    | Scikit-learn (ROC, AUC, classification report)      |
+| Environment      | Python 3.x, Jupyter Notebook                        |
+
+---
+---
+
+## ⚙️ Setup & Usage
+```bash
+git clone https://github.com/YOUR_USERNAME/brain-tumor-detection-classification.git
+cd brain-tumor-detection-classification
+pip install -r requirements.txt
+```
+
+Download dataset from [Kaggle](https://www.kaggle.com/datasets/masoudnickparvar/brain-tumor-mri-dataset) 
+
+---
+
+## ⚠️ Known Limitations & Observations
+
+- Training done on **CPU only** (Windows — TF 2.11+ dropped native GPU support)
+- EfficientNetB0 underperformed due to **BatchNorm frozen-layer mismatch**,
+  not inherent model weakness
+- GradCAM bounding boxes are **approximate region estimates**, not precise
+  segmentation masks
+- No clinical validation on real hospital data
+
+---
+
+## 🔭 Future Work
+
+- Fix EfficientNetB0 with correct BatchNorm configuration for fair comparison
+- Implement U-Net semantic segmentation for precise tumor boundary delineation
+- Add Monte Carlo Dropout uncertainty to the batch inference pipeline
+- Deploy as a Flask/FastAPI web application
+- Clinical validation with radiologists
+
+---
+
+## 👩‍💻 Author
+
+**Vashita Pandey**  
+**Anand Mehrotra**
+B.Tech CSE Core | VIT Chennai  
+[LinkedIn](https://linkedin.com/in/vashita-pandey-341713238)
+
+---
+
+## 📄 License
+MIT License
