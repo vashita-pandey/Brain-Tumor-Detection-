@@ -1,0 +1,303 @@
+
+<style>
+* { box-sizing: border-box; margin: 0; padding: 0; }
+body { font-family: var(--font-sans); }
+.dash { padding: 1.5rem 0; }
+.header { margin-bottom: 1.5rem; }
+.header h2 { font-size: 18px; font-weight: 500; color: var(--color-text-primary); }
+.header p { font-size: 13px; color: var(--color-text-secondary); margin-top: 4px; }
+.metric-grid { display: grid; grid-template-columns: repeat(4, minmax(0,1fr)); gap: 10px; margin-bottom: 1.5rem; }
+.metric { background: var(--color-background-secondary); border-radius: var(--border-radius-md); padding: 0.85rem 1rem; }
+.metric-label { font-size: 12px; color: var(--color-text-secondary); margin-bottom: 4px; }
+.metric-val { font-size: 22px; font-weight: 500; color: var(--color-text-primary); }
+.metric-sub { font-size: 11px; color: var(--color-text-tertiary); margin-top: 2px; }
+.section { margin-bottom: 1.75rem; }
+.section-title { font-size: 13px; font-weight: 500; color: var(--color-text-secondary); text-transform: uppercase; letter-spacing: 0.05em; margin-bottom: 0.85rem; }
+.charts-row { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+.chart-card { background: var(--color-background-primary); border: 0.5px solid var(--color-border-tertiary); border-radius: var(--border-radius-lg); padding: 1rem 1.25rem; }
+.chart-title { font-size: 13px; font-weight: 500; color: var(--color-text-primary); margin-bottom: 0.6rem; }
+.chart-sub { font-size: 11px; color: var(--color-text-secondary); margin-bottom: 0.85rem; }
+.legend { display: flex; flex-wrap: wrap; gap: 12px; margin-bottom: 10px; }
+.legend-item { display: flex; align-items: center; gap: 5px; font-size: 11px; color: var(--color-text-secondary); }
+.legend-dot { width: 8px; height: 8px; border-radius: 2px; flex-shrink: 0; }
+.full-row { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 12px; }
+.three-row { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 12px; }
+.perf-table { width: 100%; border-collapse: collapse; font-size: 12px; }
+.perf-table th { color: var(--color-text-tertiary); font-weight: 400; text-align: left; padding: 4px 6px; border-bottom: 0.5px solid var(--color-border-tertiary); }
+.perf-table td { padding: 5px 6px; color: var(--color-text-primary); border-bottom: 0.5px solid var(--color-border-tertiary); }
+.perf-table tr:last-child td { border-bottom: none; }
+.bar-wrap { display: flex; flex-direction: column; gap: 5px; }
+.bar-row { display: flex; align-items: center; gap: 8px; font-size: 11px; }
+.bar-label { width: 68px; color: var(--color-text-secondary); flex-shrink: 0; text-align: right; }
+.bar-track { flex: 1; height: 8px; background: var(--color-background-secondary); border-radius: 4px; overflow: hidden; }
+.bar-fill { height: 100%; border-radius: 4px; }
+.bar-val { width: 32px; color: var(--color-text-primary); font-weight: 500; }
+.cm-grid { display: grid; gap: 1px; }
+.cm-cell { display: flex; align-items: center; justify-content: center; font-size: 10px; font-weight: 500; border-radius: 2px; }
+.model-badge { display: inline-block; font-size: 10px; padding: 2px 8px; border-radius: 10px; margin-bottom: 8px; }
+.badge-cnn { background: var(--color-background-info); color: var(--color-text-info); }
+.badge-resnet { background: var(--color-background-success); color: var(--color-text-success); }
+.badge-eff { background: var(--color-background-warning); color: var(--color-text-warning); }
+</style>
+
+<div class="dash">
+  <div class="header">
+    <h2>Brain tumor MRI classification — model performance dashboard</h2>
+    <p>4 classes: Glioma · Meningioma · No tumor · Pituitary &nbsp;|&nbsp; Dataset: 5,600 train / 1,600 test (224×224 RGB)</p>
+  </div>
+
+  <div class="metric-grid">
+    <div class="metric">
+      <div class="metric-label">Best model accuracy</div>
+      <div class="metric-val" style="color:#185FA5;">95.1%</div>
+      <div class="metric-sub">ResNet50 (fine-tuned)</div>
+    </div>
+    <div class="metric">
+      <div class="metric-label">Ensemble accuracy</div>
+      <div class="metric-val">81.3%</div>
+      <div class="metric-sub">CNN + ResNet + EfficientNet</div>
+    </div>
+    <div class="metric">
+      <div class="metric-label">CNN accuracy</div>
+      <div class="metric-val">82.9%</div>
+      <div class="metric-sub">Custom 3-block CNN</div>
+    </div>
+    <div class="metric">
+      <div class="metric-label">Training samples</div>
+      <div class="metric-val">5,600</div>
+      <div class="metric-sub">400 × 4 classes × 3 sets</div>
+    </div>
+  </div>
+
+  <div class="section">
+    <div class="section-title">Model accuracy comparison</div>
+    <div class="chart-card">
+      <div class="bar-wrap">
+        <div class="bar-row">
+          <div class="bar-label">ResNet50</div>
+          <div class="bar-track"><div class="bar-fill" style="width:95.1%;background:#185FA5;"></div></div>
+          <div class="bar-val">95.1%</div>
+        </div>
+        <div class="bar-row">
+          <div class="bar-label">CNN v2</div>
+          <div class="bar-track"><div class="bar-fill" style="width:82.9%;background:#185FA5;"></div></div>
+          <div class="bar-val">82.9%</div>
+        </div>
+        <div class="bar-row">
+          <div class="bar-label">Ensemble</div>
+          <div class="bar-track"><div class="bar-fill" style="width:81.3%;background:#888780;"></div></div>
+          <div class="bar-val">81.3%</div>
+        </div>
+        <div class="bar-row">
+          <div class="bar-label">CNN v1</div>
+          <div class="bar-track"><div class="bar-fill" style="width:82.9%;background:#888780;"></div></div>
+          <div class="bar-val">82.9%</div>
+        </div>
+        <div class="bar-row">
+          <div class="bar-label">EfficientNet</div>
+          <div class="bar-track"><div class="bar-fill" style="width:28%;background:#E24B4A;"></div></div>
+          <div class="bar-val">28%</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="section">
+    <div class="section-title">Training curves</div>
+    <div class="charts-row">
+      <div class="chart-card">
+        <div class="chart-title">CNN v1 — accuracy (10 epochs)</div>
+        <div class="legend">
+          <div class="legend-item"><div class="legend-dot" style="background:#185FA5;"></div>Training</div>
+          <div class="legend-item"><div class="legend-dot" style="background:#E24B4A;"></div>Validation</div>
+        </div>
+        <div style="position:relative;height:180px;"><canvas id="c1"></canvas></div>
+      </div>
+      <div class="chart-card">
+        <div class="chart-title">ResNet50 — accuracy (10+10 epochs)</div>
+        <div class="legend">
+          <div class="legend-item"><div class="legend-dot" style="background:#0F6E56;"></div>Training</div>
+          <div class="legend-item"><div class="legend-dot" style="background:#D85A30;"></div>Validation</div>
+        </div>
+        <div style="position:relative;height:180px;"><canvas id="c2"></canvas></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="section">
+    <div class="section-title">Per-class performance (F1 score)</div>
+    <div class="three-row">
+      <div class="chart-card">
+        <div class="chart-title"><span class="model-badge badge-cnn">CNN</span></div>
+        <div style="position:relative;height:160px;"><canvas id="c3"></canvas></div>
+      </div>
+      <div class="chart-card">
+        <div class="chart-title"><span class="model-badge badge-resnet">ResNet50</span></div>
+        <div style="position:relative;height:160px;"><canvas id="c4"></canvas></div>
+      </div>
+      <div class="chart-card">
+        <div class="chart-title"><span class="model-badge" style="background:var(--color-background-secondary);color:var(--color-text-secondary);">Ensemble</span></div>
+        <div style="position:relative;height:160px;"><canvas id="c5"></canvas></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="section">
+    <div class="section-title">Detailed per-class metrics — ResNet50 (best model)</div>
+    <div class="chart-card">
+      <table class="perf-table">
+        <thead>
+          <tr>
+            <th>Class</th>
+            <th>Precision</th>
+            <th>Recall</th>
+            <th>F1</th>
+            <th>Support</th>
+            <th style="width:120px;">F1 bar</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>Glioma</td>
+            <td>0.99</td>
+            <td>0.83</td>
+            <td>0.90</td>
+            <td>400</td>
+            <td><div class="bar-track" style="height:6px;"><div class="bar-fill" style="width:90%;background:#185FA5;"></div></div></td>
+          </tr>
+          <tr>
+            <td>Meningioma</td>
+            <td>0.90</td>
+            <td>0.97</td>
+            <td>0.94</td>
+            <td>400</td>
+            <td><div class="bar-track" style="height:6px;"><div class="bar-fill" style="width:94%;background:#185FA5;"></div></div></td>
+          </tr>
+          <tr>
+            <td>No tumor</td>
+            <td>0.95</td>
+            <td>1.00</td>
+            <td>0.97</td>
+            <td>400</td>
+            <td><div class="bar-track" style="height:6px;"><div class="bar-fill" style="width:97%;background:#0F6E56;"></div></div></td>
+          </tr>
+          <tr>
+            <td>Pituitary</td>
+            <td>0.97</td>
+            <td>1.00</td>
+            <td>0.98</td>
+            <td>400</td>
+            <td><div class="bar-track" style="height:6px;"><div class="bar-fill" style="width:98%;background:#0F6E56;"></div></div></td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <div class="section">
+    <div class="section-title">Model complexity overview</div>
+    <div class="charts-row">
+      <div class="chart-card">
+        <div class="chart-title">Parameters by model (M)</div>
+        <div style="position:relative;height:180px;"><canvas id="c6"></canvas></div>
+      </div>
+      <div class="chart-card">
+        <div class="chart-title">Accuracy vs model size</div>
+        <div class="chart-sub">Bubble size = parameter count</div>
+        <div style="position:relative;height:180px;"><canvas id="c7"></canvas></div>
+      </div>
+    </div>
+  </div>
+
+</div>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.js"></script>
+<script>
+Chart.defaults.font.family = 'var(--font-sans)';
+Chart.defaults.color = '#888780';
+const gridColor = 'rgba(136,135,128,0.15)';
+
+new Chart(document.getElementById('c1'), {
+  type: 'line',
+  data: {
+    labels: ['E1','E2','E3','E4','E5','E6','E7','E8','E9','E10'],
+    datasets: [
+      { label: 'Train', data: [0.63,0.75,0.79,0.81,0.83,0.86,0.86,0.88,0.88,0.90], borderColor: '#185FA5', backgroundColor: 'rgba(24,95,165,0.08)', tension: 0.3, pointRadius: 2, fill: true },
+      { label: 'Val',   data: [0.72,0.74,0.77,0.78,0.79,0.83,0.80,0.82,0.84,0.83], borderColor: '#E24B4A', backgroundColor: 'transparent', tension: 0.3, pointRadius: 2, borderDash: [4,2] }
+    ]
+  },
+  options: { responsive: true, maintainAspectRatio: false, plugins: { legend: { display: false } }, scales: { y: { min: 0.5, max: 1, grid: { color: gridColor }, ticks: { callback: v => (v*100).toFixed(0)+'%', font:{size:10} } }, x: { grid: { display: false }, ticks: { font:{size:10} } } } }
+});
+
+new Chart(document.getElementById('c2'), {
+  type: 'line',
+  data: {
+    labels: ['E1','E2','E3','E4','E5','E6','E7','E8','E9','E10','FT1','FT2','FT3','FT4','FT5','FT6','FT7','FT8','FT9','FT10'],
+    datasets: [
+      { label: 'Train', data: [0.52,0.51,0.54,0.58,0.59,0.60,0.62,0.63,0.63,0.62,0.82,0.88,0.90,0.90,0.91,0.92,0.97,0.98,0.99,0.99], borderColor: '#0F6E56', backgroundColor: 'rgba(15,110,86,0.08)', tension: 0.3, pointRadius: 1.5, fill: true },
+      { label: 'Val',   data: [0.49,0.61,0.62,0.64,0.60,0.65,0.62,0.65,0.67,0.66,0.82,0.93,0.93,0.95,0.95,0.95,0.95,0.94,0.96,0.95], borderColor: '#D85A30', backgroundColor: 'transparent', tension: 0.3, pointRadius: 1.5, borderDash: [4,2] }
+    ]
+  },
+  options: { responsive: true, maintainAspectRatio: false, plugins: { legend: { display: false } }, scales: { y: { min: 0.4, max: 1, grid: { color: gridColor }, ticks: { callback: v => (v*100).toFixed(0)+'%', font:{size:10} } }, x: { grid: { display: false }, ticks: { font:{size:10}, maxTicksLimit: 8 } } } }
+});
+
+const classLabels = ['Glioma','Meningioma','No tumor','Pituitary'];
+const cnnF1   = [0.77, 0.75, 0.83, 0.96];
+const resnetF1= [0.90, 0.94, 0.97, 0.98];
+const ensF1   = [0.76, 0.72, 0.85, 0.90];
+
+function barChart(id, data, color) {
+  new Chart(document.getElementById(id), {
+    type: 'bar',
+    data: { labels: classLabels, datasets: [{ data, backgroundColor: color, borderRadius: 3 }] },
+    options: {
+      indexAxis: 'y', responsive: true, maintainAspectRatio: false,
+      plugins: { legend: { display: false } },
+      scales: {
+        x: { min: 0, max: 1, grid: { color: gridColor }, ticks: { callback: v => (v*100).toFixed(0)+'%', font:{size:9} } },
+        y: { grid: { display: false }, ticks: { font:{size:10} } }
+      }
+    }
+  });
+}
+
+barChart('c3', cnnF1,    '#185FA5');
+barChart('c4', resnetF1, '#0F6E56');
+barChart('c5', ensF1,    '#888780');
+
+new Chart(document.getElementById('c6'), {
+  type: 'bar',
+  data: {
+    labels: ['Custom CNN', 'EfficientNetB0', 'ResNet50'],
+    datasets: [{ data: [11.17, 4.21, 23.85], backgroundColor: ['#185FA5','#D85A30','#0F6E56'], borderRadius: 4 }]
+  },
+  options: {
+    responsive: true, maintainAspectRatio: false,
+    plugins: { legend: { display: false } },
+    scales: {
+      y: { grid: { color: gridColor }, ticks: { font:{size:10}, callback: v => v+'M' } },
+      x: { grid: { display: false }, ticks: { font:{size:10} } }
+    }
+  }
+});
+
+new Chart(document.getElementById('c7'), {
+  type: 'bubble',
+  data: {
+    datasets: [
+      { label: 'Custom CNN',    data: [{ x: 11.17, y: 82.9, r: 14 }], backgroundColor: 'rgba(24,95,165,0.6)' },
+      { label: 'EfficientNetB0',data: [{ x: 4.21,  y: 28,   r: 8  }], backgroundColor: 'rgba(216,90,48,0.6)' },
+      { label: 'ResNet50',      data: [{ x: 23.85, y: 95.1, r: 20 }], backgroundColor: 'rgba(15,110,86,0.65)' },
+    ]
+  },
+  options: {
+    responsive: true, maintainAspectRatio: false,
+    layout: { padding: 20 },
+    plugins: { legend: { display: false } },
+    scales: {
+      x: { title: { display: true, text: 'Params (M)', font:{size:10} }, grid: { color: gridColor }, ticks: { font:{size:10} } },
+      y: { min: 15, max: 100, title: { display: true, text: 'Accuracy %', font:{size:10} }, grid: { color: gridColor }, ticks: { font:{size:10}, callback: v => v+'%' } }
+    }
+  }
+});
+</script>
