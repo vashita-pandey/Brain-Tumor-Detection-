@@ -193,7 +193,6 @@ Download dataset from [Kaggle](https://www.kaggle.com/datasets/masoudnickparvar/
 ## 👩‍💻 Author
 
 **Vashita Pandey**  
-**Anand Mehrotra**
 B.Tech CSE Core | VIT Chennai  
 [LinkedIn](https://linkedin.com/in/vashita-pandey-341713238)
 
